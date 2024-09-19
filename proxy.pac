@@ -1,12 +1,32 @@
 function FindProxyForURL(url, host) {
-    // Substitua pelo seu hostname interno
     var internalHost = "intranet.seudominio.com.br";
+    var directHosts = [
+        "*.manage.microsoft.com",
+        "*.windowsupdate.com",
+        "*.microsoftonline.com",
+        "*.msftauth.net",
+        "*.msauth.net",
+        "*.microsoft.com",
+        "*.smd.msft.net",
+        "login.live.com",
+        "login.microsoftonline.com",
+    ];
+    function isInDirectHosts(host) {
+        for (var i = 0; i < directHosts.length; i++) {
+            if (shExpMatch(host, directHosts[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    if (isInDirectHosts(host)) {
+        return "DIRECT";
+    }
 
     if (dnsResolve(internalHost)) {
-        // Conexão interna detectada, não usa proxy
         return "DIRECT";
     } else {
-        // Conexão externa, usa o proxy
         return "PROXY proxy.lacasella.com.br:4443";
     }
 }
